@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SAKTHI MART | Handmade Marketplace</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="logo">
+            SAKTHI <span>MART</span>
+        </div>
+
+        <div class="search-box">
+            <input 
+                type="text"
+                id="searchInput"
+                placeholder="Search for products, jewellery, decor..."
+            >
+            <button onclick="searchProducts()">Search</button>
+        </div>
+
+        <div class="header-actions">
+            <button onclick="showLogin()">Login</button>
+
+            <button onclick="openCart()">
+                Cart
+                <span id="cartCount">0</span>
+            </button>
+        </div>
+
+    </header>
+
+
+    <!-- NAVIGATION -->
+    <nav class="navigation">
+
+        <a href="#home">Home</a>
+
+        <a href="#categories">Categories</a>
+
+        <a href="#products">Products</a>
+
+        <a href="#deals">Deals</a>
+
+        <a href="#about">About Us</a>
+
+    </nav>
+
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+
+        <div class="hero-content">
+
+            <p class="small-title">
+                HANDMADE • UNIQUE • ORIGINAL
+            </p>
+
+            <h1>
+                Discover Things<br>
+                Made With Care.
+            </h1>
+
+            <p>
+                Explore beautiful handmade products created
+                by talented artisans and independent sellers.
+            </p>
+
+            <button class="shop-button" onclick="scrollToProducts()">
+                Shop Now
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+    <section class="categories-section" id="categories">
+
+        <div class="section-heading">
+
+            <p>EXPLORE</p>
+
+            <h2>Shop By Category</h2>
+
+        </div>
+
+
+        <div class="category-grid">
+
+            <div class="category-card">
+                <div class="category-image jewellery"></div>
+                <h3>Jewellery</h3>
+                <p>Beautiful handmade pieces</p>
+            </div>
+
+
+            <div class="category-card">
+                <div class="category-image pottery"></div>
+                <h3>Pottery</h3>
+                <p>Traditional handmade pottery</p>
+            </div>
+
+
+            <div class="category-card">
+                <div class="category-image bags"></div>
+                <h3>Bags & Baskets</h3>
+                <p>Crafted with natural materials</p>
+            </div>
+
+
+            <div class="category-card">
+                <div class="category-image decor"></div>
+                <h3>Home Decor</h3>
+                <p>Make your space special</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+    <section class="products-section" id="products">
+
+        <div class="section-heading">
+
+            <p>OUR COLLECTION</p>
+
+            <h2>Featured Products</h2>
+
+        </div>
+
+
+        <div class="product-grid" id="productGrid">
+
+            <!-- Products will be added using JavaScript -->
+
+        </div>
+
+    </section>
+
+
+    <!-- DEALS -->
+    <section class="deal-section" id="deals">
+
+        <div>
+
+            <p>LIMITED TIME OFFER</p>
+
+            <h2>Handmade pieces at special prices.</h2>
+
+            <button onclick="scrollToProducts()">
+                Explore Deals
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section class="about-section" id="about">
+
+        <div>
+
+            <p>ABOUT SAKTHI MART</p>
+
+            <h2>Where creativity meets craftsmanship.</h2>
+
+            <p>
+                SAKTHI MART brings handmade and artisan products
+                together in one marketplace, connecting customers
+                with independent creators and sellers.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="footer-logo">
+            SAKTHI MART
+        </div>
+
+        <p>
+            Handmade products. Independent sellers. Unique stories.
+        </p>
+
+        <div class="footer-links">
+
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+            <a href="#">Contact</a>
+
+        </div>
+
+        <p class="copyright">
+            © 2026 SAKTHI MART. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- CART PANEL -->
+    <div class="cart-panel" id="cartPanel">
+
+        <div class="cart-header">
+
+            <h2>Your Cart</h2>
+
+            <button onclick="closeCart()">×</button>
+
+        </div>
+
+        <div id="cartItems">
+
+            <p class="empty-cart">
+                Your cart is empty.
+            </p>
+
+        </div>
+
+        <div class="cart-bottom">
+
+            <strong>
+                Total: ₹<span id="cartTotal">0</span>
+            </strong>
+
+            <button onclick="checkout()">
+                Proceed to Checkout
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOGIN POPUP -->
+    <div class="modal" id="loginModal">
+
+        <div class="modal-box">
+
+            <button class="close-modal" onclick="closeLogin()">
+                ×
+            </button>
+
+            <h2>Welcome Back</h2>
+
+            <p>Login to continue shopping.</p>
+
+            <input
+                type="text"
+                id="loginEmail"
+                placeholder="Email"
+            >
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+            >
+
+            <button onclick="loginUser()">
+                Login
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

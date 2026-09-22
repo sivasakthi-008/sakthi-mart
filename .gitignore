@@ -1,0 +1,11 @@
+.env
+config.properties
+
+target/
+*.class
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
