@@ -6,3 +6,15 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+-- Admin seed
+INSERT INTO users (name, email, password_hash, role)
+SELECT
+    'Admin',
+    'admin@sakthimart.com',
+    '$2a$12$REPLACE_WITH_BCRYPT_HASH',
+    'ADMIN'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE email = 'admin@sakthimart.com'
+);
