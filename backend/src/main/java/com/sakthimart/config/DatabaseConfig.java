@@ -25,4 +25,10 @@ public class DatabaseConfig {
     public static DataSource getDataSource() {
         return dataSource;
     }
+
+    public static void close() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+        }
+    }
 }
