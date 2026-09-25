@@ -11,7 +11,7 @@ INSERT INTO users (name, email, password_hash, role)
 SELECT
     'Admin',
     'admin@sakthimart.com',
-    '$2a$12$REPLACE_WITH_BCRYPT_HASH',
+    '$2a$12$.Sz9eUi75rNxVGptuNSnx.q5GEdC.ahFaVkvx0rPilb0CbuYUmjaC',
     'ADMIN'
 WHERE NOT EXISTS (
     SELECT 1
