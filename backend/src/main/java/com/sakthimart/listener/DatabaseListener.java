@@ -34,13 +34,18 @@ public class DatabaseListener implements ServletContextListener {
             try (Statement statement = connection.createStatement()) {
                 for (String command : sql.split(";")) {
 
-                    String trimmedCommand = command.trim();
+    String trimmedCommand = command.trim();
 
-                    if (!trimmedCommand.isEmpty()
-                            && !trimmedCommand.startsWith("--")) {
-                        statement.execute(trimmedCommand);
-                    }
-                }
+    if (trimmedCommand.startsWith("-- Admin seed")) {
+        trimmedCommand = trimmedCommand.substring(
+                trimmedCommand.indexOf('\n') + 1
+        ).trim();
+    }
+
+    if (!trimmedCommand.isEmpty()) {
+        statement.execute(trimmedCommand);
+    }
+}
             }
 
         } catch (Exception e) {
