@@ -430,6 +430,7 @@ displayProducts();
 updateCart();
 
 function openRegister() {
+    document.getElementById("loginModal").style.display = "none";
     document.getElementById("registerModal").style.display = "flex";
 }
 
