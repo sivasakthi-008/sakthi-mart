@@ -5,17 +5,47 @@ import com.sakthimart.config.DatabaseConfig;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.Statement;
 
 @WebListener
 public class DatabaseListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        try {
-            DatabaseConfig.getDataSource().getConnection().close();
+
+        try (Connection connection =
+                     DatabaseConfig.getDataSource().getConnection();
+             InputStream inputStream =
+                     event.getServletContext()
+                          .getResourceAsStream("/WEB-INF/classes/schema.sql")) {
+
+            if (inputStream == null) {
+                throw new RuntimeException("schema.sql not found");
+            }
+
+            String sql = new String(
+                    inputStream.readAllBytes(),
+                    StandardCharsets.UTF_8
+            );
+
+            try (Statement statement = connection.createStatement()) {
+                for (String command : sql.split(";")) {
+
+                    String trimmedCommand = command.trim();
+
+                    if (!trimmedCommand.isEmpty()
+                            && !trimmedCommand.startsWith("--")) {
+                        statement.execute(trimmedCommand);
+                    }
+                }
+            }
+
         } catch (Exception e) {
             throw new RuntimeException(
-                    "Unable to initialize database connection pool", e);
+                    "Unable to initialize database", e);
         }
     }
 
