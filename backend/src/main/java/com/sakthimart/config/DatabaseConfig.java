@@ -13,8 +13,10 @@ public class DatabaseConfig {
         HikariConfig config = new HikariConfig();
 
         config.setJdbcUrl("jdbc:h2:./data/sakthimart");
+        config.setDriverClassName("org.h2.Driver");
         config.setUsername("sa");
         config.setPassword("");
+        
 
         config.setMaximumPoolSize(10);
         config.setMinimumIdle(2);
