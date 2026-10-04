@@ -3,6 +3,7 @@ package com.sakthimart.servlet;
 import com.sakthimart.dao.JdbcProductDao;
 import com.sakthimart.dao.ProductDao;
 import com.sakthimart.model.Product;
+import com.sakthimart.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 @WebServlet("/api/products")
 public class ProductServlet extends HttpServlet {
@@ -23,6 +25,7 @@ public class ProductServlet extends HttpServlet {
         productDao = new JdbcProductDao();
     }
 
+    // SELLER - Create Product
     @Override
     protected void doPost(
             HttpServletRequest request,
@@ -43,26 +46,27 @@ public class ProductServlet extends HttpServlet {
         }
 
         try {
-            com.sakthimart.model.User user =
-        (com.sakthimart.model.User)
-                session.getAttribute("user");
+            User user = (User) session.getAttribute("user");
 
-if (!"SELLER".equals(user.getRole())) {
-    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-    response.getWriter().write(
-            "{\"error\":\"Only sellers can create products\"}"
-    );
-    return;
-}
+            if (!"SELLER".equals(user.getRole())) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write(
+                        "{\"error\":\"Only sellers can create products\"}"
+                );
+                return;
+            }
 
-Long sellerId = user.getId();
+            Long sellerId = user.getId();
 
             String name = request.getParameter("name");
             String description = request.getParameter("description");
+
             BigDecimal price =
                     new BigDecimal(request.getParameter("price"));
+
             int stock =
                     Integer.parseInt(request.getParameter("stock"));
+
             String category = request.getParameter("category");
             String imageUrl = request.getParameter("imageUrl");
 
@@ -88,6 +92,78 @@ Long sellerId = user.getId();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(
                     "{\"error\":\"Invalid product details\"}"
+            );
+        }
+    }
+
+    // BUYER - View All Products
+    @Override
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws IOException {
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            List<Product> products = productDao.findAll();
+
+            StringBuilder json = new StringBuilder("[");
+
+            for (int i = 0; i < products.size(); i++) {
+
+                Product product = products.get(i);
+
+                json.append("{")
+                        .append("\"id\":")
+                        .append(product.getId())
+                        .append(",")
+
+                        .append("\"name\":\"")
+                        .append(product.getName())
+                        .append("\",")
+
+                        .append("\"description\":\"")
+                        .append(product.getDescription())
+                        .append("\",")
+
+                        .append("\"price\":")
+                        .append(product.getPrice())
+                        .append(",")
+
+                        .append("\"stock\":")
+                        .append(product.getStock())
+                        .append(",")
+
+                        .append("\"category\":\"")
+                        .append(product.getCategory())
+                        .append("\",")
+
+                        .append("\"imageUrl\":\"")
+                        .append(product.getImageUrl())
+                        .append("\"")
+
+                        .append("}");
+
+                if (i < products.size() - 1) {
+                    json.append(",");
+                }
+            }
+
+            json.append("]");
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(json.toString());
+
+        } catch (Exception e) {
+
+            response.setStatus(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+            );
+
+            response.getWriter().write(
+                    "{\"error\":\"Unable to fetch products\"}"
             );
         }
     }
