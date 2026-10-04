@@ -700,7 +700,42 @@
 
 
     <script src="script.js"></script>
+<section id="sellerDashboard" class="seller-dashboard" style="display:none;">
+    <div class="section-container">
+        <div class="section-heading">
+            <span>Seller Panel</span>
+            <h2>Add New Product</h2>
+            <p>Manage your handmade products from here.</p>
+        </div>
 
+        <form id="sellerProductForm" class="seller-form">
+            <input type="text" id="productName" placeholder="Product name" required>
+
+            <textarea id="productDescription"
+                      placeholder="Product description"
+                      required></textarea>
+
+            <input type="number" id="productPrice"
+                   placeholder="Price" min="1" step="0.01" required>
+
+            <input type="number" id="productStock"
+                   placeholder="Stock quantity" min="0" required>
+
+            <select id="productCategory" required>
+                <option value="">Select category</option>
+                <option value="Jewellery">Jewellery</option>
+                <option value="Pottery">Pottery</option>
+                <option value="Bags">Bags & Baskets</option>
+                <option value="Decor">Home Decor</option>
+            </select>
+
+            <input type="text" id="productImageUrl"
+                   placeholder="Image URL">
+
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+</section>
 </body>
 
 </html>

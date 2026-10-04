@@ -1,4 +1,4 @@
-// ===============================
+﻿// ===============================
 // SAKTHI MART - MAIN SCRIPT
 // ===============================
 
@@ -98,12 +98,7 @@ async function loadProducts() {
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
-            products = data.map(product => ({
-                ...product,
-                price: Number(product.price),
-                rating: Number(product.rating || 4.5),
-                imageUrl: product.imageUrl || "assets/hero.jpg"
-            }));
+            products = [...fallbackProducts, ...data.map(product => ({ ...product, price: Number(product.price), rating: Number(product.rating || 4.5), imageUrl: product.imageUrl || "assets/hero.jpg" }))];
         } else {
             products = fallbackProducts;
         }
@@ -162,19 +157,19 @@ function displayProducts(productList = products) {
                 <h3>${escapeHTML(product.name)}</h3>
 
                 <div class="rating">
-                    ★ ${product.rating || "4.5"}
+                     ${product.rating || "4.5"}
                 </div>
 
                 <div class="price-row">
 
                     <span class="price">
-                        ₹${Number(product.price).toLocaleString("en-IN")}
+                        ${Number(product.price).toLocaleString("en-IN")}
                     </span>
 
                     ${
                         product.oldPrice
                             ? `<span class="old-price">
-                                ₹${Number(product.oldPrice).toLocaleString("en-IN")}
+                                ${Number(product.oldPrice).toLocaleString("en-IN")}
                                </span>`
                             : ""
                     }
@@ -420,7 +415,7 @@ function updateCart() {
 
         cartItems.innerHTML = `
             <div class="empty-cart">
-                <div class="empty-cart-icon">🛒</div>
+                <div class="empty-cart-icon"></div>
                 <h3>Your cart is empty</h3>
                 <p>Add some beautiful handmade products.</p>
             </div>
@@ -447,7 +442,7 @@ function updateCart() {
                 </strong>
 
                 <p>
-                    ₹${Number(item.price).toLocaleString("en-IN")}
+                    ${Number(item.price).toLocaleString("en-IN")}
                 </p>
 
             </div>
@@ -456,7 +451,7 @@ function updateCart() {
 
                 <button
                     onclick="changeQuantity(${item.id}, -1)">
-                    −
+                    
                 </button>
 
                 <span>
@@ -551,7 +546,7 @@ async function loginUser() {
         formData.append("password", password);
 
         const response = await fetch(
-            `${API_BASE}/login`,
+            `${API_BASE}/auth/login`,
             {
                 method: "POST",
                 headers: {
@@ -568,8 +563,11 @@ async function loginUser() {
             alert(result.error || "Login failed.");
             return;
         }
-
-        alert("Login successful! 🎉");
+        localStorage.setItem("userRole", result.role);
+        if (result.role === "SELLER") {
+    document.getElementById("sellerDashboard").style.display = "block";
+}
+        alert("Login successful! ");
 
         closeLogin();
 
@@ -598,7 +596,7 @@ function checkout() {
     }
 
     alert(
-        "Checkout module will be connected next. 🛍️"
+        "Checkout module will be connected next. "
     );
 }
 
@@ -690,3 +688,110 @@ window.addEventListener("click", event => {
     }
 
 });
+
+document.getElementById("sellerProductForm")?.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const formData = new URLSearchParams();
+
+    formData.append("name", document.getElementById("productName").value.trim());
+    formData.append("description", document.getElementById("productDescription").value.trim());
+    formData.append("price", document.getElementById("productPrice").value);
+    formData.append("stock", document.getElementById("productStock").value);
+    formData.append("category", document.getElementById("productCategory").value);
+    formData.append("imageUrl", document.getElementById("productImageUrl").value.trim());
+
+    try {
+        const response = await fetch(`${API_BASE}/products`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Unable to add product.");
+            return;
+        }
+
+        alert("Product added successfully!");
+        this.reset();
+        loadProducts();
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to connect to server.");
+    }
+});
+function showRegister() {
+    const modal = document.getElementById("registerModal");
+    if (modal) {
+        modal.classList.add("active");
+    }
+    closeLogin();
+}
+
+function closeRegister() {
+    const modal = document.getElementById("registerModal");
+    if (modal) {
+        modal.classList.remove("active");
+    }
+}
+
+function switchToLogin() {
+    closeRegister();
+    showLogin();
+}
+
+async function registerUser() {
+    const name = document.getElementById("registerName").value.trim();
+    const email = document.getElementById("registerEmail").value.trim();
+    const password = document.getElementById("registerPassword").value.trim();
+    const role = document.getElementById("registerRole").value;
+
+    if (!name || !email || !password) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    try {
+        const formData = new URLSearchParams();
+
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("role", role);
+
+        const response = await fetch(`${API_BASE}/auth/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Registration failed.");
+            return;
+        }
+
+        alert("Registration successful! Please login.");
+        closeRegister();
+        showLogin();
+
+        document.getElementById("registerName").value = "";
+        document.getElementById("registerEmail").value = "";
+        document.getElementById("registerPassword").value = "";
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to connect to server.");
+    }
+}
+
+

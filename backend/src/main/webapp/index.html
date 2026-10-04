@@ -38,11 +38,11 @@
         <div class="header-actions">
 
             <button onclick="showLogin()">
-                ‘¤ Login
+                 Login
             </button>
 
             <button onclick="openCart()">
-                ›’ Cart
+                 Cart
                 <span id="cartCount">0</span>
             </button>
 
@@ -114,7 +114,7 @@
     <section class="trust-bar">
 
         <div class="trust-item">
-            <strong>šš</strong>
+            <strong></strong>
             <div>
                 <b>Fast Delivery</b>
                 <span>Reliable doorstep delivery</span>
@@ -122,7 +122,7 @@
         </div>
 
         <div class="trust-item">
-            <strong>”’</strong>
+            <strong></strong>
             <div>
                 <b>Secure Shopping</b>
                 <span>Safe and protected checkout</span>
@@ -130,7 +130,7 @@
         </div>
 
         <div class="trust-item">
-            <strong>âœ¨</strong>
+            <strong></strong>
             <div>
                 <b>Unique Products</b>
                 <span>Made by independent artisans</span>
@@ -138,7 +138,7 @@
         </div>
 
         <div class="trust-item">
-            <strong>’¬</strong>
+            <strong></strong>
             <div>
                 <b>Customer Support</b>
                 <span>We're here to help</span>
@@ -232,7 +232,42 @@
 
     </section>
 
+<section id="sellerDashboard" class="seller-dashboard" style="display:none;">
+    <div class="section-container">
+        <div class="section-heading">
+            <span>Seller Panel</span>
+            <h2>Add New Product</h2>
+            <p>Manage your handmade products from here.</p>
+        </div>
 
+        <form id="sellerProductForm" class="seller-form">
+            <input type="text" id="productName" placeholder="Product name" required>
+
+            <textarea id="productDescription"
+                      placeholder="Product description"
+                      required></textarea>
+
+            <input type="number" id="productPrice"
+                   placeholder="Price" min="1" step="0.01" required>
+
+            <input type="number" id="productStock"
+                   placeholder="Stock quantity" min="0" required>
+
+            <select id="productCategory" required>
+                <option value="">Select category</option>
+                <option value="Jewellery">Jewellery</option>
+                <option value="Pottery">Pottery</option>
+                <option value="Bags">Bags & Baskets</option>
+                <option value="Decor">Home Decor</option>
+            </select>
+
+            <input type="text" id="productImageUrl"
+                   placeholder="Image URL">
+
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+</section>
     <!-- ================= PRODUCTS ================= -->
 
     <section
@@ -359,7 +394,7 @@
             <div class="why-card">
 
                 <div class="why-icon">
-                    â¤ï¸
+                    
                 </div>
 
                 <h3>
@@ -377,7 +412,7 @@
             <div class="why-card">
 
                 <div class="why-icon">
-                    §‘â€Ž¨
+                    
                 </div>
 
                 <h3>
@@ -395,7 +430,7 @@
             <div class="why-card">
 
                 <div class="why-icon">
-                    Œ±
+                    
                 </div>
 
                 <h3>
@@ -575,7 +610,7 @@
 
 
         <p class="copyright">
-            Â© 2026 SAKTHI MART. All rights reserved.
+             2026 SAKTHI MART. All rights reserved.
         </p>
 
     </footer>
@@ -595,7 +630,7 @@
 
             <button
                 onclick="closeCart()">
-                Ã—
+                
             </button>
 
         </div>
@@ -619,7 +654,7 @@
                 </strong>
 
                 <strong>
-                    â‚¹<span id="cartTotal">0</span>
+                    <span id="cartTotal">0</span>
                 </strong>
 
             </div>
@@ -645,12 +680,12 @@
             <button
                 class="close-modal"
                 onclick="closeLogin()">
-                Ã—
+                
             </button>
 
 
             <div class="modal-icon">
-                ‘‹
+                
             </div>
 
             <h2>
@@ -680,14 +715,72 @@
             </button>
 
 
-            <p class="login-help">
-                New to SAKTHI MART?
-                Registration will be connected next.
-            </p>
+           <p class="login-help">
+    New to SAKTHI MART?
+    <button type="button" onclick="showRegister()">
+        Create an account
+    </button>
+</p>
 
         </div>
 
     </div>
+    <!-- ================= REGISTER MODAL ================= -->
+
+<div class="modal" id="registerModal">
+
+    <div class="modal-box">
+
+        <button
+            class="close-modal"
+            onclick="closeRegister()">
+            X
+        </button>
+
+        <div class="modal-icon">
+            Register
+        </div>
+
+        <h2>Create Account</h2>
+
+        <p>
+            Join SAKTHI MART today.
+        </p>
+
+        <input
+            type="text"
+            id="registerName"
+            placeholder="Full Name">
+
+        <input
+            type="email"
+            id="registerEmail"
+            placeholder="Email">
+
+        <input
+            type="password"
+            id="registerPassword"
+            placeholder="Password">
+
+        <select id="registerRole">
+            <option value="BUYER">Buyer</option>
+            <option value="SELLER">Seller</option>
+        </select>
+
+        <button onclick="registerUser()">
+            Create Account
+        </button>
+
+        <p class="login-help">
+            Already have an account?
+            <button type="button" onclick="switchToLogin()">
+                Login
+            </button>
+        </p>
+
+    </div>
+
+</div>
 
 
     <!-- ================= BACK TO TOP ================= -->
@@ -695,7 +788,7 @@
     <button
         class="back-to-top"
         onclick="window.scrollTo({top:0, behavior:'smooth'})">
-        â†‘
+        
     </button>
 
 
@@ -704,5 +797,6 @@
 </body>
 
 </html>
+
 
 
