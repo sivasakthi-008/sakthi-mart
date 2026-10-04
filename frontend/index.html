@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,8 @@
 
 <body>
 
-    <!-- HEADER -->
+    <!-- ================= HEADER ================= -->
+
     <header class="header">
 
         <div class="logo">
@@ -19,27 +21,38 @@
         </div>
 
         <div class="search-box">
-            <input 
+
+            <input
                 type="text"
                 id="searchInput"
-                placeholder="Search for products, jewellery, decor..."
+                placeholder="Search products, jewellery, bags, decor..."
+                onkeydown="if(event.key === 'Enter') searchProducts()"
             >
-            <button onclick="searchProducts()">Search</button>
+
+            <button onclick="searchProducts()">
+                Search
+            </button>
+
         </div>
 
         <div class="header-actions">
-            <button onclick="showLogin()">Login</button>
+
+            <button onclick="showLogin()">
+                ‘¤ Login
+            </button>
 
             <button onclick="openCart()">
-                Cart
+                ›’ Cart
                 <span id="cartCount">0</span>
             </button>
+
         </div>
 
     </header>
 
 
-    <!-- NAVIGATION -->
+    <!-- ================= NAVIGATION ================= -->
+
     <nav class="navigation">
 
         <a href="#home">Home</a>
@@ -55,13 +68,14 @@
     </nav>
 
 
-    <!-- HERO SECTION -->
+    <!-- ================= HERO ================= -->
+
     <section class="hero" id="home">
 
         <div class="hero-content">
 
             <p class="small-title">
-                HANDMADE • UNIQUE • ORIGINAL
+                HANDMADE | UNIQUE | ORIGINAL
             </p>
 
             <h1>
@@ -70,21 +84,75 @@
             </h1>
 
             <p>
-                Explore beautiful handmade products created
-                by talented artisans and independent sellers.
+                Shop beautiful handmade products from
+                independent artisans and creative sellers.
             </p>
 
-            <button class="shop-button" onclick="scrollToProducts()">
-                Shop Now
-            </button>
+            <div class="hero-buttons">
+
+                <button
+                    class="shop-button"
+                    onclick="scrollToProducts()">
+                    Shop Now
+                </button>
+
+                <button
+                    class="secondary-button"
+                    onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">
+                    Explore Categories
+                </button>
+
+            </div>
 
         </div>
 
     </section>
 
 
-    <!-- CATEGORIES -->
-    <section class="categories-section" id="categories">
+    <!-- ================= TRUST BAR ================= -->
+
+    <section class="trust-bar">
+
+        <div class="trust-item">
+            <strong>šš</strong>
+            <div>
+                <b>Fast Delivery</b>
+                <span>Reliable doorstep delivery</span>
+            </div>
+        </div>
+
+        <div class="trust-item">
+            <strong>”’</strong>
+            <div>
+                <b>Secure Shopping</b>
+                <span>Safe and protected checkout</span>
+            </div>
+        </div>
+
+        <div class="trust-item">
+            <strong>âœ¨</strong>
+            <div>
+                <b>Unique Products</b>
+                <span>Made by independent artisans</span>
+            </div>
+        </div>
+
+        <div class="trust-item">
+            <strong>’¬</strong>
+            <div>
+                <b>Customer Support</b>
+                <span>We're here to help</span>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- ================= CATEGORIES ================= -->
+
+    <section
+        class="categories-section"
+        id="categories">
 
         <div class="section-heading">
 
@@ -92,36 +160,72 @@
 
             <h2>Shop By Category</h2>
 
+            <span>
+                Find something special for every corner of your life.
+            </span>
+
         </div>
 
 
         <div class="category-grid">
 
-            <div class="category-card">
+            <div
+                class="category-card"
+                onclick="searchCategory('Jewellery')">
+
                 <div class="category-image jewellery"></div>
+
                 <h3>Jewellery</h3>
-                <p>Beautiful handmade pieces</p>
+
+                <p>
+                    Beautiful handmade pieces
+                </p>
+
             </div>
 
 
-            <div class="category-card">
+            <div
+                class="category-card"
+                onclick="searchCategory('Pottery')">
+
                 <div class="category-image pottery"></div>
+
                 <h3>Pottery</h3>
-                <p>Traditional handmade pottery</p>
+
+                <p>
+                    Traditional handmade pottery
+                </p>
+
             </div>
 
 
-            <div class="category-card">
+            <div
+                class="category-card"
+                onclick="searchCategory('Bags')">
+
                 <div class="category-image bags"></div>
+
                 <h3>Bags & Baskets</h3>
-                <p>Crafted with natural materials</p>
+
+                <p>
+                    Crafted with natural materials
+                </p>
+
             </div>
 
 
-            <div class="category-card">
+            <div
+                class="category-card"
+                onclick="searchCategory('Decor')">
+
                 <div class="category-image decor"></div>
+
                 <h3>Home Decor</h3>
-                <p>Make your space special</p>
+
+                <p>
+                    Make your space special
+                </p>
+
             </div>
 
         </div>
@@ -129,8 +233,11 @@
     </section>
 
 
-    <!-- PRODUCTS -->
-    <section class="products-section" id="products">
+    <!-- ================= PRODUCTS ================= -->
+
+    <section
+        class="products-section"
+        id="products">
 
         <div class="section-heading">
 
@@ -138,28 +245,92 @@
 
             <h2>Featured Products</h2>
 
+            <span>
+                Discover handmade products selected for you.
+            </span>
+
         </div>
 
 
-        <div class="product-grid" id="productGrid">
+        <!-- PRODUCT FILTER BAR -->
 
-            <!-- Products will be added using JavaScript -->
+        <div class="product-toolbar">
+
+            <div>
+                <strong>Popular Products</strong>
+            </div>
+
+            <div class="sort-box">
+
+                <label for="sortProducts">
+                    Sort:
+                </label>
+
+                <select id="sortProducts">
+                    <option value="popular">
+                        Popular
+                    </option>
+
+                    <option value="low">
+                        Price: Low to High
+                    </option>
+
+                    <option value="high">
+                        Price: High to Low
+                    </option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRODUCT GRID -->
+
+        <div
+            class="product-grid"
+            id="productGrid">
+
+            <!-- Products are loaded by JavaScript -->
+
+        </div>
+
+
+        <div class="view-more">
+
+            <button
+                onclick="scrollToProducts()">
+                View More Products
+            </button>
 
         </div>
 
     </section>
 
 
-    <!-- DEALS -->
-    <section class="deal-section" id="deals">
+    <!-- ================= DEALS ================= -->
 
-        <div>
+    <section
+        class="deal-section"
+        id="deals">
 
-            <p>LIMITED TIME OFFER</p>
+        <div class="deal-content">
 
-            <h2>Handmade pieces at special prices.</h2>
+            <p>
+                LIMITED TIME OFFER
+            </p>
 
-            <button onclick="scrollToProducts()">
+            <h2>
+                Handmade pieces at special prices.
+            </h2>
+
+            <span>
+                Discover unique creations and bring
+                something special home today.
+            </span>
+
+            <button
+                onclick="scrollToProducts()">
                 Explore Deals
             </button>
 
@@ -168,19 +339,102 @@
     </section>
 
 
-    <!-- ABOUT -->
-    <section class="about-section" id="about">
+    <!-- ================= WHY SAKTHI MART ================= -->
+
+    <section class="why-section">
+
+        <div class="section-heading">
+
+            <p>WHY SAKTHI MART</p>
+
+            <h2>
+                More Than Just Shopping
+            </h2>
+
+        </div>
+
+
+        <div class="why-grid">
+
+            <div class="why-card">
+
+                <div class="why-icon">
+                    â¤ï¸
+                </div>
+
+                <h3>
+                    Made With Care
+                </h3>
+
+                <p>
+                    Every handmade product carries
+                    the effort and creativity of its maker.
+                </p>
+
+            </div>
+
+
+            <div class="why-card">
+
+                <div class="why-icon">
+                    §‘â€Ž¨
+                </div>
+
+                <h3>
+                    Support Artisans
+                </h3>
+
+                <p>
+                    Shop directly from independent
+                    creators and small sellers.
+                </p>
+
+            </div>
+
+
+            <div class="why-card">
+
+                <div class="why-icon">
+                    Œ±
+                </div>
+
+                <h3>
+                    Thoughtful Products
+                </h3>
+
+                <p>
+                    Discover unique products made
+                    with creativity and purpose.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ABOUT ================= -->
+
+    <section
+        class="about-section"
+        id="about">
 
         <div>
 
-            <p>ABOUT SAKTHI MART</p>
+            <p>
+                ABOUT SAKTHI MART
+            </p>
 
-            <h2>Where creativity meets craftsmanship.</h2>
+            <h2>
+                Where creativity meets craftsmanship.
+            </h2>
 
             <p>
-                SAKTHI MART brings handmade and artisan products
-                together in one marketplace, connecting customers
-                with independent creators and sellers.
+                SAKTHI MART brings handmade and artisan
+                products together in one marketplace,
+                connecting customers with independent
+                creators and sellers.
             </p>
 
         </div>
@@ -188,7 +442,45 @@
     </section>
 
 
-    <!-- FOOTER -->
+    <!-- ================= NEWSLETTER ================= -->
+
+    <section class="newsletter-section">
+
+        <div class="newsletter-content">
+
+            <p>
+                STAY IN THE LOOP
+            </p>
+
+            <h2>
+                Discover new handmade finds.
+            </h2>
+
+            <span>
+                Get updates about new products,
+                offers and special collections.
+            </span>
+
+            <div class="newsletter-form">
+
+                <input
+                    type="email"
+                    placeholder="Enter your email">
+
+                <button
+                    onclick="alert('Thank you for subscribing!')">
+                    Subscribe
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
     <footer>
 
         <div class="footer-logo">
@@ -199,32 +491,115 @@
             Handmade products. Independent sellers. Unique stories.
         </p>
 
-        <div class="footer-links">
 
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Help</a>
-            <a href="#">Contact</a>
+        <div class="footer-columns">
+
+            <div>
+
+                <h3>Shop</h3>
+
+                <a href="#categories">
+                    Categories
+                </a>
+
+                <a href="#products">
+                    Products
+                </a>
+
+                <a href="#deals">
+                    Deals
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <h3>Customer</h3>
+
+                <a href="#">
+                    My Account
+                </a>
+
+                <a href="#">
+                    Orders
+                </a>
+
+                <a href="#">
+                    Help Center
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <h3>Company</h3>
+
+                <a href="#about">
+                    About Us
+                </a>
+
+                <a href="#">
+                    Contact
+                </a>
+
+                <a href="#">
+                    Privacy
+                </a>
+
+            </div>
 
         </div>
 
+
+        <div class="footer-links">
+
+            <a href="#">
+                Privacy
+            </a>
+
+            <a href="#">
+                Terms
+            </a>
+
+            <a href="#">
+                Help
+            </a>
+
+            <a href="#">
+                Contact
+            </a>
+
+        </div>
+
+
         <p class="copyright">
-            © 2026 SAKTHI MART. All rights reserved.
+            Â© 2026 SAKTHI MART. All rights reserved.
         </p>
 
     </footer>
 
 
-    <!-- CART PANEL -->
-    <div class="cart-panel" id="cartPanel">
+    <!-- ================= CART PANEL ================= -->
+
+    <div
+        class="cart-panel"
+        id="cartPanel">
 
         <div class="cart-header">
 
-            <h2>Your Cart</h2>
+            <h2>
+                Your Cart
+            </h2>
 
-            <button onclick="closeCart()">×</button>
+            <button
+                onclick="closeCart()">
+                Ã—
+            </button>
 
         </div>
+
 
         <div id="cartItems">
 
@@ -234,13 +609,23 @@
 
         </div>
 
+
         <div class="cart-bottom">
 
-            <strong>
-                Total: ₹<span id="cartTotal">0</span>
-            </strong>
+            <div class="cart-summary">
 
-            <button onclick="checkout()">
+                <strong>
+                    Total
+                </strong>
+
+                <strong>
+                    â‚¹<span id="cartTotal">0</span>
+                </strong>
+
+            </div>
+
+            <button
+                onclick="checkout()">
                 Proceed to Checkout
             </button>
 
@@ -249,41 +634,75 @@
     </div>
 
 
-    <!-- LOGIN POPUP -->
-    <div class="modal" id="loginModal">
+    <!-- ================= LOGIN MODAL ================= -->
+
+    <div
+        class="modal"
+        id="loginModal">
 
         <div class="modal-box">
 
-            <button class="close-modal" onclick="closeLogin()">
-                ×
+            <button
+                class="close-modal"
+                onclick="closeLogin()">
+                Ã—
             </button>
 
-            <h2>Welcome Back</h2>
 
-            <p>Login to continue shopping.</p>
+            <div class="modal-icon">
+                ‘‹
+            </div>
+
+            <h2>
+                Welcome Back
+            </h2>
+
+            <p>
+                Login to continue shopping.
+            </p>
+
 
             <input
                 type="text"
                 id="loginEmail"
-                placeholder="Email"
-            >
+                placeholder="Email">
+
 
             <input
                 type="password"
                 id="loginPassword"
-                placeholder="Password"
-            >
+                placeholder="Password">
 
-            <button onclick="loginUser()">
+
+            <button
+                onclick="loginUser()">
                 Login
             </button>
+
+
+            <p class="login-help">
+                New to SAKTHI MART?
+                Registration will be connected next.
+            </p>
 
         </div>
 
     </div>
 
 
+    <!-- ================= BACK TO TOP ================= -->
+
+    <button
+        class="back-to-top"
+        onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        â†‘
+    </button>
+
+
     <script src="script.js"></script>
 
 </body>
+
 </html>
+
+
