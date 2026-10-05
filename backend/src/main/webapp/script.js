@@ -322,7 +322,7 @@ function scrollToProducts() {
 // CART
 // ===============================
 
-function addToCart(productId) {
+async function addToCart(productId) {
 
     const product = products.find(
         item => Number(item.id) === Number(productId)
@@ -330,25 +330,50 @@ function addToCart(productId) {
 
     if (!product) return;
 
-    const existingProduct = cart.find(
-        item => Number(item.id) === Number(productId)
-    );
+    try {
+        const formData = new URLSearchParams();
 
-    if (existingProduct) {
-        existingProduct.quantity++;
-    } else {
-        cart.push({
-            ...product,
-            quantity: 1
+        formData.append("productId", productId);
+        formData.append("quantity", "1");
+
+        const response = await fetch(`${API_BASE}/cart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
         });
-    }
 
-    updateCart();
-    openCart();
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Unable to add product to cart.");
+            return;
+        }
+
+        const existingProduct = cart.find(
+            item => Number(item.id) === Number(productId)
+        );
+
+        if (existingProduct) {
+            existingProduct.quantity++;
+        } else {
+            cart.push({
+                ...product,
+                quantity: 1
+            });
+        }
+
+        updateCart();
+        openCart();
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to connect to cart.");
+    }
 }
 
-
-function changeQuantity(productId, change) {
+async function changeQuantity(productId, change) {
 
     const item = cart.find(
         product => Number(product.id) === Number(productId)
@@ -356,28 +381,81 @@ function changeQuantity(productId, change) {
 
     if (!item) return;
 
-    item.quantity += change;
+    const newQuantity = item.quantity + change;
 
-    if (item.quantity <= 0) {
+    try {
+
+        const formData = new URLSearchParams();
+
+        formData.append("productId", productId);
+        formData.append("quantity", newQuantity);
+
+        const response = await fetch(`${API_BASE}/cart`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Unable to update cart.");
+            return;
+        }
+
+        if (newQuantity <= 0) {
+
+            cart = cart.filter(
+                product => Number(product.id) !== Number(productId)
+            );
+
+        } else {
+
+            item.quantity = newQuantity;
+        }
+
+        updateCart();
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Unable to update cart.");
+    }
+}
+
+async function removeFromCart(productId) {
+
+    try {
+
+        const response = await fetch(
+            `${API_BASE}/cart?productId=${productId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Unable to remove product.");
+            return;
+        }
+
         cart = cart.filter(
             product => Number(product.id) !== Number(productId)
         );
+
+        updateCart();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to connect to server.");
     }
-
-    updateCart();
 }
-
-
-function removeFromCart(productId) {
-
-    cart = cart.filter(
-        product => Number(product.id) !== Number(productId)
-    );
-
-    updateCart();
-}
-
-
 function updateCart() {
 
     const cartItems =
@@ -435,24 +513,32 @@ function updateCart() {
 
         cartItem.innerHTML = `
 
-            <div class="cart-item-info">
+    <div class="cart-item-image">
+        <img
+            src="${escapeHTML(item.imageUrl || "assets/hero.jpg")}"
+            alt="${escapeHTML(item.name)}"
+            onerror="this.src='assets/hero.jpg'"
+        >
+    </div>
 
-                <strong>
-                    ${escapeHTML(item.name)}
-                </strong>
+    <div class="cart-item-info">
 
-                <p>
-                    ${Number(item.price).toLocaleString("en-IN")}
-                </p>
+        <strong>
+            ${escapeHTML(item.name)}
+        </strong>
 
-            </div>
+        <p>
+            ${Number(item.price).toLocaleString("en-IN")}
+        </p>
+
+    </div>
 
             <div class="cart-controls">
 
                 <button
-                    onclick="changeQuantity(${item.id}, -1)">
-                    
-                </button>
+    onclick="changeQuantity(${item.id}, -1)">
+    −
+</button>
 
                 <span>
                     ${item.quantity}
@@ -579,6 +665,20 @@ async function loginUser() {
             "Unable to connect to server. Please try again."
         );
     }
+}
+function logoutUser() {
+    localStorage.removeItem("userRole");
+
+    const sellerDashboard =
+        document.getElementById("sellerDashboard");
+
+    if (sellerDashboard) {
+        sellerDashboard.style.display = "none";
+    }
+
+    alert("Logged out successfully.");
+
+    location.reload();
 }
 
 
