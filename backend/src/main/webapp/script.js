@@ -686,7 +686,7 @@ function logoutUser() {
 // CHECKOUT
 // ===============================
 
-function checkout() {
+async function checkout() {
 
     if (cart.length === 0) {
 
@@ -695,9 +695,47 @@ function checkout() {
         return;
     }
 
-    alert(
-        "Checkout module will be connected next. "
-    );
+    try {
+
+        const response = await fetch(
+            `${API_BASE}/orders`,
+            {
+                method: "POST"
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+
+            alert(
+                result.error ||
+                "Unable to place order."
+            );
+
+            return;
+        }
+
+        alert(
+            "Order placed successfully!\n" +
+            "Order ID: " + result.orderId +
+            "\nTotal: ₹" + result.totalAmount
+        );
+
+        cart = [];
+
+        updateCart();
+
+        closeCart();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to checkout."
+        );
+    }
 }
 
 
