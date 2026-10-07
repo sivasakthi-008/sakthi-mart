@@ -650,6 +650,12 @@ async function loginUser() {
             return;
         }
         localStorage.setItem("userRole", result.role);
+        if (result.role === "ADMIN") {
+    const adminPanel = document.getElementById("adminPanel");
+    if (adminPanel) {
+        adminPanel.style.display = "block";
+    }
+}
         if (result.role === "SELLER") {
     document.getElementById("sellerDashboard").style.display = "block";
     loadMyProducts();
