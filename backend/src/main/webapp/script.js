@@ -977,4 +977,16 @@ async function deleteMyProduct(id) {
         alert("Unable to delete product.");
     }
 }
+async function submitReview() {
+    const rating = document.getElementById("reviewRating").value;
+    const comment = document.getElementById("reviewComment").value;
+
+    if (!comment.trim()) {
+        alert("Please write a review.");
+        return;
+    }
+
+    alert("Review submitted successfully!");
+    document.getElementById("reviewComment").value = "";
+}
 
