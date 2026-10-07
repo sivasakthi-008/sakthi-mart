@@ -652,6 +652,7 @@ async function loginUser() {
         localStorage.setItem("userRole", result.role);
         if (result.role === "SELLER") {
     document.getElementById("sellerDashboard").style.display = "block";
+    loadMyProducts();
 }
         alert("Login successful! ");
 
@@ -931,5 +932,49 @@ async function registerUser() {
         alert("Unable to connect to server.");
     }
 }
+async function loadMyProducts() {
+    const section = document.getElementById("myProductsSection");
+    const list = document.getElementById("myProductsList");
 
+    if (!section || !list) return;
+
+    try {
+        const response = await fetch(`${API_BASE}/products?view=mine`);
+        const products = await response.json();
+
+        section.style.display = "block";
+
+        if (products.length === 0) {
+            list.innerHTML = "<p>No products added yet.</p>";
+            return;
+        }
+
+        list.innerHTML = products.map(product => `
+            <div style="padding:15px; margin:10px 0; border:1px solid #ddd; border-radius:10px;">
+                <h3>${product.name}</h3>
+                <p>₹${product.price} | Stock: ${product.stock}</p>
+                <button onclick="deleteMyProduct(${product.id})">Delete</button>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function deleteMyProduct(id) {
+    if (!confirm("Delete this product?")) return;
+
+    const response = await fetch(
+        `${API_BASE}/products?id=${id}`,
+        { method: "DELETE" }
+    );
+
+    if (response.ok) {
+        alert("Product deleted successfully.");
+        loadMyProducts();
+    } else {
+        alert("Unable to delete product.");
+    }
+}
 

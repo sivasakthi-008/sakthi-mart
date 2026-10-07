@@ -107,7 +107,19 @@ public class ProductServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            List<Product> products = productDao.findAll();
+            List<Product> products;
+
+HttpSession session = request.getSession(false);
+
+if (session != null && session.getAttribute("user") != null
+        && "mine".equals(request.getParameter("view"))) {
+
+    User user = (User) session.getAttribute("user");
+    products = productDao.findBySellerId(user.getId());
+
+} else {
+    products = productDao.findAll();
+}
 
             StringBuilder json = new StringBuilder("[");
 
@@ -167,4 +179,135 @@ public class ProductServlet extends HttpServlet {
             );
         }
     }
+// SELLER - Update Product
+@Override
+protected void doPut(
+        HttpServletRequest request,
+        HttpServletResponse response)
+        throws IOException {
+
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+
+    HttpSession session = request.getSession(false);
+
+    if (session == null || session.getAttribute("user") == null) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(
+                "{\"error\":\"Authentication required\"}"
+        );
+        return;
+    }
+
+    try {
+        User user = (User) session.getAttribute("user");
+
+        if (!"SELLER".equals(user.getRole())) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write(
+                    "{\"error\":\"Only sellers can update products\"}"
+            );
+            return;
+        }
+
+        Long productId =
+                Long.parseLong(request.getParameter("id"));
+
+        Product existing =
+                productDao.findById(productId).orElseThrow();
+
+        if (!existing.getSellerId().equals(user.getId())) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write(
+                    "{\"error\":\"You can update only your products\"}"
+            );
+            return;
+        }
+
+        Product product = new Product(
+                productId,
+                user.getId(),
+                request.getParameter("name"),
+                request.getParameter("description"),
+                new BigDecimal(request.getParameter("price")),
+                Integer.parseInt(request.getParameter("stock")),
+                request.getParameter("category"),
+                request.getParameter("imageUrl")
+        );
+
+        productDao.update(product);
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(
+                "{\"message\":\"Product updated successfully\"}"
+        );
+
+    } catch (Exception e) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().write(
+                "{\"error\":\"Unable to update product\"}"
+        );
+    }
+}
+
+
+// SELLER - Delete Product
+@Override
+protected void doDelete(
+        HttpServletRequest request,
+        HttpServletResponse response)
+        throws IOException {
+
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+
+    HttpSession session = request.getSession(false);
+
+    if (session == null || session.getAttribute("user") == null) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(
+                "{\"error\":\"Authentication required\"}"
+        );
+        return;
+    }
+
+    try {
+        User user = (User) session.getAttribute("user");
+
+        if (!"SELLER".equals(user.getRole())) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write(
+                    "{\"error\":\"Only sellers can delete products\"}"
+            );
+            return;
+        }
+
+        Long productId =
+                Long.parseLong(request.getParameter("id"));
+
+        Product existing =
+                productDao.findById(productId).orElseThrow();
+
+        if (!existing.getSellerId().equals(user.getId())) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write(
+                    "{\"error\":\"You can delete only your products\"}"
+            );
+            return;
+        }
+
+        productDao.delete(productId);
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(
+                "{\"message\":\"Product deleted successfully\"}"
+        );
+
+    } catch (Exception e) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().write(
+                "{\"error\":\"Unable to delete product\"}"
+        );
+    }
+}
 }
