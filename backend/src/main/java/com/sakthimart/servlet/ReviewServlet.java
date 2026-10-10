@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import com.sakthimart.model.User;
 
 @WebServlet("/api/reviews")
 public class ReviewServlet extends HttpServlet {
