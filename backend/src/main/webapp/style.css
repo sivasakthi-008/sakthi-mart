@@ -938,3 +938,35 @@ footer > p {
         padding: 55px 20px;
     }
 }
+/* CART QUANTITY CONTROLS */
+.cart-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cart-controls button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fff;
+    color: #222;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.cart-controls button:hover {
+    background: #222;
+    color: #fff;
+}
+
+.cart-controls .remove-cart {
+    font-size: 13px;
+    min-height: 32px;
+}
