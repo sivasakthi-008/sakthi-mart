@@ -60,7 +60,7 @@ public class ReviewServlet extends HttpServlet {
 
             try (Connection connection = DatabaseConfig.getConnection()) {
                 String sql = "INSERT INTO reviews "
-                        + "(product_id, user_id, rating, comment) "
+                        + + "(product_id, user_id, rating, review_text) "
                         + "VALUES (?, ?, ?, ?)";
 
                 try (PreparedStatement statement =
