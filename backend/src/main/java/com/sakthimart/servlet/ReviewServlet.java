@@ -26,18 +26,23 @@ public class ReviewServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        if (session == null || session.getAttribute("userId") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write(
-                "{\"error\":\"Please login to submit a review.\"}"
-            );
-            return;
-        }
+User user = null;
+
+if (session != null &&
+        session.getAttribute("user") instanceof User) {
+    user = (User) session.getAttribute("user");
+}
+
+if (user == null || user.getId() == null) {
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.getWriter().write(
+        "{\"error\":\"Please login to submit a review.\"}"
+    );
+    return;
+}
 
         try {
-            int userId = Integer.parseInt(
-                session.getAttribute("userId").toString()
-            );
+            long userId = user.getId();
 
             int productId = Integer.parseInt(
                 request.getParameter("productId")
@@ -67,7 +72,7 @@ public class ReviewServlet extends HttpServlet {
                              connection.prepareStatement(sql)) {
 
                     statement.setInt(1, productId);
-                    statement.setInt(2, userId);
+                    statement.setLong(2, userId);
                     statement.setInt(3, rating);
                     statement.setString(4, comment.trim());
 
