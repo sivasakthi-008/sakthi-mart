@@ -98,7 +98,12 @@ async function loadProducts() {
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
-            products = [...fallbackProducts, ...data.map(product => ({ ...product, price: Number(product.price), rating: Number(product.rating || 4.5), imageUrl: product.imageUrl || "assets/hero.jpg" }))];
+            products = data.map(product => ({
+    ...product,
+    price: Number(product.price),
+    rating: Number(product.rating || 4.5),
+    imageUrl: product.imageUrl || "assets/hero.jpg"
+}));
         } else {
             products = fallbackProducts;
         }
