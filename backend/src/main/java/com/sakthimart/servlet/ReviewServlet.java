@@ -66,7 +66,7 @@ if (user == null || user.getId() == null) {
 
             try (Connection connection = DatabaseConfig.getDataSource().getConnection()) {
                 String sql = "INSERT INTO reviews "
-                        + + "(product_id, user_id, rating, review_text) "
+                         + "(product_id, user_id, rating, review_text) "
                         + "VALUES (?, ?, ?, ?)";
 
                 try (PreparedStatement statement =
