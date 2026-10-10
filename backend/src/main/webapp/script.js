@@ -1054,3 +1054,49 @@ async function writeReview(productId) {
         alert("Unable to connect to the server.");
     }
 }
+async function writeReview(productId) {
+    const rating = prompt("Give a rating from 1 to 5:");
+    if (rating === null) return;
+
+    const ratingNumber = Number(rating);
+
+    if (!Number.isInteger(ratingNumber) || ratingNumber < 1 || ratingNumber > 5) {
+        alert("Please enter a rating from 1 to 5.");
+        return;
+    }
+
+    const comment = prompt("Write your review:");
+    if (comment === null) return;
+
+    if (!comment.trim()) {
+        alert("Please write a review.");
+        return;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append("productId", productId);
+    formData.append("rating", ratingNumber);
+    formData.append("comment", comment.trim());
+
+    try {
+        const response = await fetch(`${API_BASE}/reviews`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(result.error || "Unable to submit review.");
+            return;
+        }
+
+        alert("Review submitted successfully!");
+    } catch (error) {
+        console.error(error);
+        alert("Unable to connect to the server.");
+    }
+}
