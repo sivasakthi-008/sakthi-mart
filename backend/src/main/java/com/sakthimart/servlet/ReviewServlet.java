@@ -41,6 +41,13 @@ if (user == null || user.getId() == null) {
     );
     return;
 }
+if (!"BUYER".equalsIgnoreCase(user.getRole())) {
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    response.getWriter().write(
+        "{\"error\":\"Only buyers can submit reviews.\"}"
+    );
+    return;
+}
 
         try {
             long userId = user.getId();
