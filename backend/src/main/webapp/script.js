@@ -181,6 +181,11 @@ function displayProducts(productList = products) {
                     onclick="addToCart(${product.id})">
                     Add to Cart
                 </button>
+                <button
+                    class="review-button"
+                    onclick="writeReview(${product.id})">
+                    Write a Review ⭐
+                </button>
 
             </div>
         `;
