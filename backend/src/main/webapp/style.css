@@ -942,7 +942,9 @@ footer > p {
 .cart-controls {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    margin-top: 10px;
     flex-wrap: wrap;
 }
 
@@ -966,7 +968,35 @@ footer > p {
     color: #fff;
 }
 
+.cart-controls span {
+    display: inline-block;
+    min-width: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
 .cart-controls .remove-cart {
     font-size: 13px;
     min-height: 32px;
+}
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.cart-controls button:hover {
+    background: #222;
+    color: #fff;
+}
+
+.cart-controls .remove-cart {
+    font-size: 13px;
+    min-height: 32px;
+    background: #e0e0e0;
+}
+
+.cart-controls span {
+    display: inline-block;
+    min-width: 20px;
+    text-align: center;
+    font-size: 16px;
 }

@@ -327,31 +327,53 @@ function scrollToProducts() {
 // CART
 // ===============================
 
-function addToCart(productId) {
-
+async function addToCart(productId) {
     const product = products.find(
         item => Number(item.id) === Number(productId)
     );
 
-    if (!product) return;
-
-    const existingProduct = cart.find(
-        item => Number(item.id) === Number(productId)
-    );
-
-    if (existingProduct) {
-        existingProduct.quantity++;
-    } else {
-        cart.push({
-            ...product,
-            quantity: 1
-        });
+    if (!product) {
+        alert("Product not found");
+        return;
     }
 
-    updateCart();
-    openCart();
-}
+    try {
+        const formData = new URLSearchParams();
+        formData.append("productId", productId);
+        formData.append("quantity", 1);
 
+        const response = await fetch(`${API_BASE}/cart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            credentials: "same-origin",
+            body: formData.toString()
+        });
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            alert(error.error || "Please login as a buyer, then try again.");
+            return;
+        }
+
+        const existingProduct = cart.find(
+            item => Number(item.id) === Number(productId)
+        );
+
+        if (existingProduct) {
+            existingProduct.quantity++;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+
+        updateCart();
+        openCart();
+    } catch (error) {
+        alert("Cannot connect to cart. Please try again.");
+        console.error(error);
+    }
+}
 
 function changeQuantity(productId, change) {
 
@@ -649,12 +671,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (searchInput) {
 
         searchInput.addEventListener(
-            "keydown",
+            "input",
             event => {
-
-                if (event.key === "Enter") {
-                    searchProducts();
-                }
+                searchProducts();
             }
         );
     }

@@ -1,4 +1,4 @@
-﻿// ===============================
+// ===============================
 // SAKTHI MART - MAIN SCRIPT
 // ===============================
 
@@ -86,7 +86,6 @@ let cart = [];
 // ===============================
 // LOAD PRODUCTS
 // ===============================
-
 async function loadProducts() {
     try {
         const response = await fetch(`${API_BASE}/products`);
@@ -99,23 +98,27 @@ async function loadProducts() {
 
         if (Array.isArray(data) && data.length > 0) {
             products = data.map(product => ({
-    ...product,
-    price: Number(product.price),
-    rating: Number(product.rating || 4.5),
-    imageUrl: product.imageUrl || "assets/hero.jpg"
-}));
+                ...product,
+                id: Number(product.id),
+                price: Number(product.price),
+                rating: Number(product.rating || 4.5),
+                imageUrl: product.imageUrl || "assets/hero.jpg"
+            }));
         } else {
-            products = fallbackProducts;
+            products = [];
         }
-
+        } else {
+            products = [];
+        }
     } catch (error) {
-        console.log("Using demo products:", error);
-        products = fallbackProducts;
+        console.error("Unable to load database products:", error);
+        products = [];
     }
 
     displayProducts();
     updateCart();
 }
+
 
 
 // ===============================
@@ -795,6 +798,7 @@ function escapeHTML(value) {
 document.addEventListener("DOMContentLoaded", () => {
 
     loadProducts();
+    loadOrderHistory();
 
     const searchInput =
         document.getElementById("searchInput");
@@ -1007,59 +1011,9 @@ async function submitReview() {
 }
 async function writeReview(productId) {
     const rating = prompt("Give a rating from 1 to 5:");
-
     if (rating === null) return;
 
     const ratingNumber = Number(rating);
-
-    if (!Number.isInteger(ratingNumber) ||
-        ratingNumber < 1 || ratingNumber > 5) {
-        alert("Please enter a rating from 1 to 5.");
-        return;
-    }
-
-    const comment = prompt("Write your review:");
-
-    if (comment === null) return;
-
-    if (!comment.trim()) {
-        alert("Please write a review.");
-        return;
-    }
-
-    const formData = new URLSearchParams();
-    formData.append("productId", productId);
-    formData.append("rating", ratingNumber);
-    formData.append("comment", comment.trim());
-
-    try {
-        const response = await fetch(`${API_BASE}/reviews`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            alert(result.error || "Unable to submit review.");
-            return;
-        }
-
-        alert("Review submitted successfully!");
-    } catch (error) {
-        console.error(error);
-        alert("Unable to connect to the server.");
-    }
-}
-async function writeReview(productId) {
-    const rating = prompt("Give a rating from 1 to 5:");
-    if (rating === null) return;
-
-    const ratingNumber = Number(rating);
-
     if (!Number.isInteger(ratingNumber) || ratingNumber < 1 || ratingNumber > 5) {
         alert("Please enter a rating from 1 to 5.");
         return;
@@ -1067,7 +1021,6 @@ async function writeReview(productId) {
 
     const comment = prompt("Write your review:");
     if (comment === null) return;
-
     if (!comment.trim()) {
         alert("Please write a review.");
         return;
@@ -1081,22 +1034,54 @@ async function writeReview(productId) {
     try {
         const response = await fetch(`${API_BASE}/reviews`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: formData
         });
-
         const result = await response.json();
 
         if (!response.ok) {
             alert(result.error || "Unable to submit review.");
             return;
         }
-
         alert("Review submitted successfully!");
     } catch (error) {
         console.error(error);
         alert("Unable to connect to the server.");
+    }
+}
+
+// ===============================
+// ORDER HISTORY
+// ===============================
+
+async function loadOrderHistory() {
+    const orderList = document.getElementById("orderHistoryList");
+    if (!orderList) return;
+
+    try {
+        const response = await fetch(`${API_BASE}/orders`);
+
+        if (!response.ok) {
+            orderList.innerHTML = "<p>Please login as a buyer to view your orders.</p>";
+            return;
+        }
+
+        const orders = await response.json();
+
+        if (!orders.length) {
+            orderList.innerHTML = "<p>No orders yet.</p>";
+            return;
+        }
+
+        orderList.innerHTML = orders.map(order => `
+            <div class="order-card" style="padding:15px; margin:12px 0; border:1px solid #ddd; border-radius:10px;">
+                <h3>Order #${order.id}</h3>
+                <p>Total: ₹${Number(order.totalAmount).toLocaleString("en-IN")}</p>
+                <p>Status: ${escapeHTML(order.status)}</p>
+            </div>
+        `).join("");
+    } catch (error) {
+        console.error("Order history error:", error);
+        orderList.innerHTML = "<p>Unable to load orders. Please try again.</p>";
     }
 }

@@ -1,10 +1,12 @@
+
 package com.sakthimart.service;
 
 import com.sakthimart.dao.UserDao;
 import com.sakthimart.model.User;
-import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.Optional;
+import java.util.Locale;
+import java.util.regex.Pattern;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthService {
 
@@ -14,54 +16,63 @@ public class AuthService {
         this.userDao = userDao;
     }
 
-    public void register(String name, String email, String password, String role) {
+    public void register(String name, String email,
+                         String password, String role) {
 
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Name is required");
-        }
-
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email is required");
-        }
-
-        if (password == null || password.length() < 6) {
+        if (name == null || name.isBlank()
+                || email == null || email.isBlank()
+                || password == null || password.length() < 8) {
             throw new IllegalArgumentException(
-                    "Password must contain at least 6 characters");
+                    "Enter valid details. Password must be at least 8 characters."
+            );
         }
 
-        if (!role.equals("BUYER") && !role.equals("SELLER")) {
-            throw new IllegalArgumentException("Invalid role");
+        if (!Pattern.matches(
+                "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+                email.trim())) {
+            throw new IllegalArgumentException("Enter a valid email.");
         }
 
-        if (userDao.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("Email already registered");
+        String safeRole = role == null
+                ? "" : role.trim().toUpperCase(Locale.ROOT);
+
+        if (!safeRole.equals("BUYER") && !safeRole.equals("SELLER")) {
+            throw new IllegalArgumentException("Invalid registration role.");
         }
 
-        String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
+
+        if (userDao.findByEmail(normalizedEmail).isPresent()) {
+            throw new IllegalArgumentException("Email already registered.");
+        }
+
+        String passwordHash = BCrypt.hashpw(
+                password, BCrypt.gensalt(12));
 
         User user = new User(
-                null,
-                name,
-                email,
-                passwordHash,
-                role
-        );
+                null, name.trim(), normalizedEmail,
+                passwordHash, safeRole);
 
         userDao.save(user);
     }
 
     public User login(String email, String password) {
 
-        Optional<User> userOptional = userDao.findByEmail(email);
-
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("Invalid email or password");
+        if (email == null || password == null) {
+            throw new IllegalArgumentException("Invalid email or password.");
         }
 
-        User user = userOptional.get();
+        User user = userDao.findByEmail(
+                email.trim().toLowerCase(Locale.ROOT))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Invalid email or password."));
 
-        if (!BCrypt.checkpw(password, user.getPasswordHash())) {
-            throw new IllegalArgumentException("Invalid email or password");
+        String storedHash = user.getPasswordHash();
+
+        if (storedHash == null
+                || !storedHash.startsWith("$2")
+                || !BCrypt.checkpw(password, storedHash)) {
+            throw new IllegalArgumentException("Invalid email or password.");
         }
 
         return user;

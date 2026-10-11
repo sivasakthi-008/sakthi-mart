@@ -243,10 +243,11 @@ protected void doPut(
         );
 
     } catch (Exception e) {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.getWriter().write(
-                "{\"error\":\"Unable to update cart\"}"
-        );
+    e.printStackTrace();
+    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    response.getWriter().write(
+            "{\"error\":\"Unable to update cart\"}"
+       );
     }
 }
 @Override
